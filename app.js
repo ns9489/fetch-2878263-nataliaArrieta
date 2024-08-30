@@ -1,37 +1,48 @@
-const url = 'https://thesimpsonsquoteapi.glitch.me/quotes'
-const containerCards = document.querySelector('.cards-container')
-const btnGenerateCard = document.querySelector('#generate-card')
-const btnGenerateMultiple = document.querySelector('#generate-multiple')
+const url = "https://thesimpsonsquoteapi.glitch.me/quotes"
+const containerCards = document.querySelector(".cards-container")
+const btnGenerateCard = document.querySelector("#generate-card")
+const btnGenerateMultiple = document.querySelector("#generate-multiple")
+const searchCharacter = document.querySelector("#input-character") 
 
-const getCharacter = async () => {
-
-    const response = await fetch(url)
-    const data = await response.json()
-    makeCharacter(data[0])
+const generateCards = () => {
+    let counter = parseInt(prompt("¿How many cards do you want to generate?"))
+    for (let i = 0; i < counter; i++) {
+        getCharacter()
+    }
 }
 
-fetch(url)
-.then(response => response.json())
-.then(data => console.log(data))
+const getCharacter = async () => {
+    const response = await fetch(url)
+    const data = await response.json()
+    makeCharacter(data[0]) 
+}
 
+searchCharacter.addEventListener('keyup', (event) => {
+    const searchTerm = event.target.value.toLowerCase()
+    const characters = containerCards.querySelectorAll(".card") 
+
+    characters.forEach(card => {
+        const title = card.querySelector('h3').textContent.toLowerCase()
+        card.style.display = title.includes(searchTerm) ? "flex" : "none"
+    })
+})
 
 const makeCharacter = (myCharacter) => {
+    const card = document.createElement("div")
+    card.classList.add("card")
 
-    const card = document.createElement('div')
-    card.classList.add('card')
-    
-    const imgCard = document.createElement('img')
+    const imgCard = document.createElement("img")
     imgCard.src = myCharacter.image
     imgCard.alt = myCharacter.character
 
-    const cardContent = document.createElement('div')
-    cardContent.classList.add('card-content')
+    const cardContent = document.createElement("div")
+    cardContent.classList.add("card-content")
 
-    const nameCard = document.createElement('h3')
+    const nameCard = document.createElement("h3")
     nameCard.textContent = myCharacter.character
 
-    const quoteCard = document.createElement('p')
-    quoteCard.textContent = myCharacter.quote 
+    const quoteCard = document.createElement("p")
+    quoteCard.textContent = myCharacter.quote
 
     card.appendChild(imgCard)
     card.appendChild(cardContent)
@@ -40,10 +51,8 @@ const makeCharacter = (myCharacter) => {
     cardContent.appendChild(quoteCard)
 
     containerCards.appendChild(card)
-
 }
 
-btnGenerateCard.addEventListener('click', getCharacter)
-btnGenerateMultiple.addEventListener('click', generateCards)
-
-
+btnGenerateCard.addEventListener("click", getCharacter)
+btnGenerateMultiple.addEventListener("click", generateCards)
+﻿
